@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Fake Users Detector</title>
+  <script src="popup.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  
+</head>
+
+<body>
+  <p class="smoothed">Spotting Fake Users on Twitter</p>
+  <hr>
+    <div class="username mx-sm-4 mb-2">
+      <label for="inputPassword2" class="sr-only">Password</label>
+      <input type="username" class="form-control" id="inputPassword2" placeholder="username">
+    </div>
+    <div class="Analyze_button">
+      <input type="submit" id="progressbar" class="Analyze btn btn-primary" value="Analyze  &rarr;">
+    </div>
+    <div class="w3-light-grey">
+      <div id="myBar" class="w3-container w3-blue w3-center" style="margin-top: 10px; width: 20%;"> 0%
+      </div>
+    </div>
+  <input type="button" id="logoutbutton" class="logout" value="LOGOUT">
+</body>
+
+</html>
+
+
+
+<!-- 
+<style>
+
+  .submit {
+  background-color: #00bfff;
+  color: white;
+  border: none;
+  padding: 10px 32px;
+  }
+
+  .login_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 150px;
+  }
+</style> -->
+
+
+<style>
+body {
+    padding: 10px;
+    margin: 30px;
+    box-shadow: black;
+    border-radius: 250px;
+}
+
+  .smoothed {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  hr {
+    border: none;
+    height: 20px;
+    width: 50%;
+    height: 50px;
+    margin-top: 0;
+    border-bottom: 1px solid #1f1209;
+    box-shadow: 0 20px 20px -20px #333;
+    margin: -50px auto 10px;
+  }
+
+  p {
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    margin-top: 100px;
+    text-align: center;
+    text-shadow: 2px;
+    font-size: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    display: inline-flex;
+  }
+
+  .Analyze {
+    background-color: #00bfff;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    margin-left: 19px;
+  }
+
+
+  .Analyze_button {
+    display: flex;
+    align-items: center;
+    margin-left: 110px;
+  }
+
+  .username {
+    margin-top: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 30px;
+    margin-right: 30px;
+    padding: 10px;
+  }
+
+  .w3-container {
+    display: none;
+  }
+
+  .logout {
+    border: none;
+    font-weight: bold;
+    margin-top: 100px;
+    margin-left: 200px;
+    background-color: white;
+    color: black;
+    font-size: x-small;
+  }
+</style>
