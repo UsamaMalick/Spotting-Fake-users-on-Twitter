@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersekrit'
 
 twitter_blueprint = make_twitter_blueprint(
-    api_key='QjjxTU8cx3ikkD95QloNS3UiK', api_secret='wgcCbMHAqaeQB4yWoxRUXjhMDMZ889q0yKq6KSfJaQM5oWtnIw')
+    api_key='jRXm1KLqwElS1RiQLTJ5A2AiA', api_secret='bOrsP5xv1wyKffo64IcG99wQu72Ma6L2SnNd3kZYPNKOWiENdx')
 
 app.register_blueprint(twitter_blueprint, url_prefix='/login')
 
@@ -31,10 +31,10 @@ def twitter_login():
     
 @app.route('/user-data/<string:username>/', methods=['GET'] )
 def user_data(username):
-    consumer_key = "QjjxTU8cx3ikkD95QloNS3UiK"
-    consumer_secret = "wgcCbMHAqaeQB4yWoxRUXjhMDMZ889q0yKq6KSfJaQM5oWtnIw"
-    access_token = "821307843802492929-9v38hvc6T6FBVTF2ZkTyBLtAg1v5f72"
-    access_secret = "f4VmDlgRK7iJFCJwbwnFbCgSBb0v1NSY4tAESHt8DBNQk"
+    consumer_key = "jRXm1KLqwElS1RiQLTJ5A2AiA"
+    consumer_secret = "bOrsP5xv1wyKffo64IcG99wQu72Ma6L2SnNd3kZYPNKOWiENdx"
+    access_token = "821307843802492929-KqNTcGu5XKP0zdCcX0RkSnUgAGkML7R"
+    access_secret = "HoX9E1PiMtAeb3TATXDAD1nQpg0qIb4J4zBFeLl5qDTQo"
 
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_secret)
