@@ -3,12 +3,14 @@ from flask import Flask, redirect, url_for
 from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
 from flask_dance.consumer import oauth_authorized
 from flask import jsonify
+from flask_cors import CORS
 import tweepy
 import json
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = 'supersekrit'
 
 twitter_blueprint = make_twitter_blueprint(
