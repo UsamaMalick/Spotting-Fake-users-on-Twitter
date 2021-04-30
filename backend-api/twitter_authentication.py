@@ -13,8 +13,13 @@ app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'supersekrit'
 
+# twitter_blueprint = make_twitter_blueprint(
+#     api_key='jRXm1KLqwElS1RiQLTJ5A2AiA',
+#     api_secret='bOrsP5xv1wyKffo64IcG99wQu72Ma6L2SnNd3kZYPNKOWiENdx')
+
 twitter_blueprint = make_twitter_blueprint(
-    api_key='jRXm1KLqwElS1RiQLTJ5A2AiA', api_secret='bOrsP5xv1wyKffo64IcG99wQu72Ma6L2SnNd3kZYPNKOWiENdx')
+    api_key='m6mimin8kNnh1uBJdCU1QoJJN',
+    api_secret='Y6WWOt0FoXtX3tdf3yn4gvBXw8ImKD4oDG8izfMCgL9sbii54b')
 
 app.register_blueprint(twitter_blueprint, url_prefix='/login')
 
