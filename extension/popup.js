@@ -4,8 +4,9 @@ window.onload=function(){
   document.getElementById("progressbar").addEventListener("click", getdata);
 }
 function myFunction(){
+
   window.location.replace("/login.html")
-  console.log('Log Out!');
+  console.log('Logged Out!');
 }
 
 function move() {
