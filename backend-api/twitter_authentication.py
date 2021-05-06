@@ -6,10 +6,11 @@ from flask_dance.consumer import oauth_authorized
 from flask import jsonify
 from flask_cors import CORS
 from pymemcache.client.base import Client
+from flask_login import logout_user
 import tweepy
 import json
 
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 app = Flask(__name__)
 CORS(app)
@@ -19,25 +20,27 @@ app.config['SECRET_KEY'] = 'supersekrit'
 #     api_key='jRXm1KLqwElS1RiQLTJ5A2AiA',
 #     api_secret='bOrsP5xv1wyKffo64IcG99wQu72Ma6L2SnNd3kZYPNKOWiENdx')
 
-twitter_blueprint = make_twitter_blueprint(
+blueprint = make_twitter_blueprint(
     api_key='jnGoFI0cLW6j9HMXeKbfgQtpO',
     api_secret='mqegiSOdgfw68eD2KUVX8q2beFzxLd8tKpHKkBDLRkVwRFJFZT')
 
-app.register_blueprint(twitter_blueprint, url_prefix='/login')
+app.register_blueprint(blueprint, url_prefix='/login')
 
 
 @app.route('/')
 def twitter_login():
-    if not twitter.authorized:
+    print(twitter.authorized)
+    client = Client('localhost')
+    if not client.get('oauth_token'):
         return redirect(url_for('twitter.login'))
-
     account_info = twitter.get('account/settings.json')
     if account_info.ok:
         client = Client('localhost')
         client.set('oauth_token', twitter.token['oauth_token'])
-        client.set('oauth_token_secret',twitter.token['oauth_token_secret'])
-        return twitter.token['oauth_token']
-
+        client.set('oauth_token_secret', twitter.token['oauth_token_secret'])
+        print(client.get('oauth_token').decode())
+        return '<h1>You have been logged In!</h1>'
+        
     return '<h1>Request failed!</h1>'
     
 @app.route('/user-data/<string:username>/', methods=['GET'] )
@@ -67,6 +70,28 @@ def user_data(username):
     # print(user_status)
     return user_status._json
     # return jsonify({'user_timeline' : 'user_timeline'})
+
+@app.route("/logout")
+def logout():
+    client = Client('localhost')
+    client.flush_all() # clears memcache
+    return jsonify('<h1>Logged Out!</h1>')
+    # twitter.invalidate_token("821307843802492929-4cJcTwIqgxr0g4RPPSjvP2XVYdM8hzN")
+
+@app.route("/status-check")
+def status():
+    client = Client('localhost')
+    print(twitter.authorized)
+    # if twitter.authorized:
+    if client.get('oauth_token'):
+        # status = twitter.token['oauth_token']
+        status = client.get('oauth_token').decode()
+        # print(status)
+        return jsonify(status)
+    else:
+        status = 0;
+        # print(status)
+        return jsonify(status)
 
 if __name__ == '__main__':
     app.run(debug=True)
