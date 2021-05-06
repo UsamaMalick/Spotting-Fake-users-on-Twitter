@@ -12,8 +12,13 @@ function login(){
     //     window.location.replace("/username.html");
     // })
     win = window.open('http://127.0.0.1:5000/','popUpWindow','height=400,width=600,left=10,top=10,scrollbars=yes,menubar=no');
-    win.window.focus();
-    setTimeout(loginpage, 5000);
+    var pollTimer = window.setInterval(function() {
+        if (win.closed !== false) { // !== is required for compatibility with Opera
+            window.clearInterval(pollTimer);
+            loginpage();
+        }
+    }, 200);
+    // setTimeout(loginpage, 5000);
     console.log('Logging In!');
 }
 

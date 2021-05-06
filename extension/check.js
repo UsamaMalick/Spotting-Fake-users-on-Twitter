@@ -11,7 +11,18 @@ function check(){
             window.location.replace("/username.html");
         }
         else {
-            window.location.replace("/login.html");
+            fetch("http://127.0.0.1:5000/last-login")
+            .then(response => {
+                return response.json();
+            })
+            .then(json => {
+                if (json){
+                    console.log(json);
+                }
+                else{
+                    window.location.replace("/login.html");
+                }
+            })
         }
     })
 }

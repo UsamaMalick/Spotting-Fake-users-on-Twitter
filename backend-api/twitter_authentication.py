@@ -31,14 +31,14 @@ app.register_blueprint(blueprint, url_prefix='/login')
 def twitter_login():
     print(twitter.authorized)
     client = Client('localhost')
-    if not client.get('oauth_token'):
-        return redirect(url_for('twitter.login'))
     account_info = twitter.get('account/settings.json')
+    if not account_info.ok:
+        return redirect(url_for('twitter.login'))
     if account_info.ok:
         client = Client('localhost')
         client.set('oauth_token', twitter.token['oauth_token'])
         client.set('oauth_token_secret', twitter.token['oauth_token_secret'])
-        print(client.get('oauth_token').decode())
+        # print(client.get('oauth_token').decode())
         return '<h1>You have been logged In!</h1>'
         
     return '<h1>Request failed!</h1>'
@@ -81,8 +81,10 @@ def logout():
 @app.route("/status-check")
 def status():
     client = Client('localhost')
-    print(twitter.authorized)
+    # print(twitter.authorized)
+    # account_info = twitter.get('account/settings.json')
     # if twitter.authorized:
+    # print(account_info.ok)
     if client.get('oauth_token'):
         # status = twitter.token['oauth_token']
         status = client.get('oauth_token').decode()
@@ -92,6 +94,22 @@ def status():
         status = 0;
         # print(status)
         return jsonify(status)
+
+@app.route("/last-login")
+def lastlogin():
+    account_info = twitter.get('account/settings.json')
+    # client = Client('localhost')
+    print(account_info)
+    if account_info.ok:
+        # if client.get('oauth_token'):
+        #     return 0
+        # else:
+        #     return jsonify()
+        print("hello2")
+        return jsonify(account_info.json()["screen_name"])
+    else:
+        print("hello")
+        return jsonify(0)
 
 if __name__ == '__main__':
     app.run(debug=True)
