@@ -9,6 +9,19 @@ from pymemcache.client.base import Client
 from flask_login import logout_user
 import tweepy
 import json
+import sys
+import time
+import random
+from datetime import datetime
+
+import numpy as np
+import pandas as pd
+import math
+
+import tensorflow as tf
+from tensorflow.keras import backend as K
+from tensorflow import keras
+
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
@@ -60,15 +73,33 @@ def user_data(username):
     number_of_tweets = 200
 
     # id ='memesbyakhir',
-    user_timeline = api.user_timeline(
+    user_timeline = api.get_user(
         id = username,
-        count = number_of_tweets,
-        include_rts = False,
-        tweet_mode = 'extended'
     )
-    user_status = user_timeline[0]
+    user_status = {
+        "favourites_count": user_timeline.favourites_count,
+        "followers_count": user_timeline.followers_count,
+        "statuses_count": user_timeline.statuses_count,
+        "friends_count": user_timeline.friends_count,
+        "listed_count": user_timeline.listed_count,
+        "url": user_timeline.url,
+        "description": user_timeline.description,
+        "timestamp": str(user_timeline.created_at),
+        "updated": str(user_timeline.status.created_at)
+    }
+
+    gen_users = pd.DataFrame([user_status])
+    data_preprocessing(gen_users)
+    # gen_users = pd.to_numeric(gen_users, downcast='float')
+    gen_users = create_digital_dna_from_profile(gen_users)
+    # user_status = user_timeline
     # print(user_status)
-    # return user_status._json
+    #gen_users.to_html('temp.html')
+    gen_users = pd.DataFrame(gen_users, dtype='float32')
+    model = keras.models.load_model('./')
+    test_predict = model.predict(gen_users)
+    print(test_predict)
+    #return gen_users
     user_percentage = {"percentage" : 50}
     resp = jsonify(user_percentage)
     return resp
@@ -113,6 +144,47 @@ def lastlogin():
     else:
         print("hello")
         return jsonify(0)
+
+def create_digital_dna_from_profile(users_df):
+    df = users_df
+    
+    # Applying necessary replacements
+    # 1 - Description is available, 0 - Description not available
+    # 1 - URL is available, 0 - URL is not available
+    df['description'] = np.where(pd.isnull(users_df['description']) == True, 0, 1)
+    df['url'] = np.where(pd.isnull(users_df['url']) == True, 0, 1)
+    
+    # Changed user data
+    return df
+
+# Assigning float valeus in fields where necessary
+def time_to_number(time_str):
+    return np.float32(datetime.fromisoformat(time_str).timestamp())
+
+def number_to_float(number):
+    return np.float32(number)
+
+def time_to_float(df, column_name):
+    for index, value in enumerate(df[column_name]):
+        df[column_name].at[index] = time_to_number(value)
+
+def to_float(df, column_name):
+    for index, value in enumerate(df[column_name]):
+        df[column_name].at[index] = number_to_float(value)
+
+def data_preprocessing(gen_users):
+    to_float(gen_users, "statuses_count")
+    to_float(gen_users, "followers_count")
+    to_float(gen_users, "friends_count")
+    to_float(gen_users, "favourites_count")
+    to_float(gen_users, "listed_count")
+
+    time_to_float(gen_users, "timestamp")
+    time_to_float(gen_users, "updated")
+
+    # Filtering data which we need
+
+    # twitter_account = gen_users.filter(["statuses_count", "followers_count", "friends_count", "favourites_count", "listed_count", "url", "description", "timestamp", "updated"])
 
 if __name__ == '__main__':
     app.run(debug=True)
