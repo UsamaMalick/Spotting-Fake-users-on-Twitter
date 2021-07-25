@@ -26,12 +26,27 @@ function checkuserdata() {
     console.log("Please Enter a valid username");
     document.getElementById("inputusername").style.border = '3px solid red';
   }
-  else{
+  // else if (checkusername()) {
+  //   console.log("Please Enter a valid username");
+  //   document.getElementById("inputusername").style.border = '3px solid red';
+  // }
+  else {
     document.getElementById("inputusername").style.border = '1px solid lightgrey';
     console.log(username);
     getdata();
   }
 }
+
+// function checkusername(){
+//   getdata2();
+//   var result = sessionStorage.getItem("result");
+//   print (result)
+//   if (result == "Incorrect Username"){
+//     return true
+//   }
+//   else
+//     return false
+// }
 
 
 //Moves to login page if user clicks on logout button
@@ -89,6 +104,19 @@ function getdata() {
 }
 
 
+// function getdata2() {
+//   var result_response;
+//   var username = document.getElementById("inputusername").value;
+//   fetch("http://127.0.0.1:5000/user-data/" + username + "/")
+//   .then(response => {
+//     return response.json();
+//   })
+//   .then(result => {
+//     result_response = result.percentage;
+//     sessionStorage.setItem("result", result_response);
+//   })
+// }
+
 //Shows the progress bar of analyze button
 function changeVisibility() {
   document.getElementById("myBar").style.display = "block";
@@ -98,4 +126,14 @@ function changeVisibility() {
 //hides the progress bar of analyze button
 function changeVisibility2() {
   document.getElementById("myBar").style.display = "none";
+}
+
+//shows the username_message
+function changeVisibility3() {
+  document.getElementById("username_message").style.display = "block";
+}
+
+//hides the username_message
+function changeVisibility4() {
+  document.getElementById("username_message").style.display = "none";
 }

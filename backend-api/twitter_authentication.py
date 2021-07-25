@@ -73,37 +73,57 @@ def user_data(username):
     number_of_tweets = 200
 
     # id ='memesbyakhir',
-    user_timeline = api.get_user(
-        id = username,
-    )
-    user_status = {
-        "favourites_count": user_timeline.favourites_count,
-        "followers_count": user_timeline.followers_count,
-        "statuses_count": user_timeline.statuses_count,
-        "friends_count": user_timeline.friends_count,
-        "listed_count": user_timeline.listed_count,
-        "url": user_timeline.url,
-        "description": user_timeline.description,
-        "timestamp": str(user_timeline.created_at),
-        "updated": str(user_timeline.status.created_at)
-    }
+    try:
+        user_timeline = api.get_user(
+            id = username,
+        )
+        user_status = {
+            "favourites_count": user_timeline.favourites_count,
+            "followers_count": user_timeline.followers_count,
+            "statuses_count": user_timeline.statuses_count,
+            "friends_count": user_timeline.friends_count,
+            "listed_count": user_timeline.listed_count,
+            "url": user_timeline.url,
+            "description": user_timeline.description,
+            "timestamp": str(user_timeline.created_at),
+            "updated": str(user_timeline.status.created_at)
+        }
+        if(user_timeline.verified is False):
+            gen_users = pd.DataFrame([user_status])
+            data_preprocessing(gen_users)
+            # gen_users = pd.to_numeric(gen_users, downcast='float')
+            gen_users = create_digital_dna_from_profile(gen_users)
+            gen_users      = gen_users.T
+            mean               = np.mean(gen_users, axis=0)
+            standard_deviation = np.std(gen_users, axis=0)
+            gen_users      = (gen_users - mean) / standard_deviation
+            gen_users = gen_users.T
+            # user_status = user_timeline
+            # print(user_status)
+            gen_users = pd.DataFrame(gen_users, dtype='float32')
+            gen_users.to_html('temp.html')
+            model = keras.models.load_model('./')
+            test_predict = model.predict(gen_users)
+            #Mean Squared Error
+            from sklearn.metrics import mean_squared_error
+            rms = np.sqrt(mean_squared_error(gen_users, test_predict))
+            threshold = 1.21
+            fakeness = rms-threshold
+            percentage = (fakeness/threshold)*100
+            print(rms)
+            #return gen_users
+        else:
+            percentage = 0
+        user_percentage = {"percentage" : 100-int(percentage)}
+        resp = jsonify(user_percentage)
+        return resp
+        # return jsonify({'user_timeline' : 'user_timeline'})
+    except:
+        message = {"result" : "Incorrect Username"}
+        resp = jsonify(message)
+        #print (resp)
+        return resp
 
-    gen_users = pd.DataFrame([user_status])
-    data_preprocessing(gen_users)
-    # gen_users = pd.to_numeric(gen_users, downcast='float')
-    gen_users = create_digital_dna_from_profile(gen_users)
-    # user_status = user_timeline
-    # print(user_status)
-    #gen_users.to_html('temp.html')
-    gen_users = pd.DataFrame(gen_users, dtype='float32')
-    model = keras.models.load_model('./')
-    test_predict = model.predict(gen_users)
-    print(test_predict)
-    #return gen_users
-    user_percentage = {"percentage" : 50}
-    resp = jsonify(user_percentage)
-    return resp
-    # return jsonify({'user_timeline' : 'user_timeline'})
 
 @app.route("/logout")
 def logout():
